@@ -92,9 +92,9 @@ export default function App() {
                   }}
                 />
               )
-            })
+            })}
           </div>
-        ))
+        ))}
       </div>
       <div className="controls">
         <input type="color" onChange={e=>addColor(e.target.value)} />
