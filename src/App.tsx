@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { GameState } from './types'
-import { WIDTH, HEIGHT, createInitialState, moveCluster, addPaletteColor } from './game'
+import { WIDTH, HEIGHT, PIXEL_WIDTH, PIXEL_HEIGHT, SUBDIV, createInitialState, moveCluster, addPaletteColor } from './game'
 
-const CELL_SIZE = 20
+const CELL_SIZE = 1
 
 function useGame() {
   const [state, setState] = useState<GameState>(() => createInitialState())
@@ -45,14 +45,14 @@ export default function App() {
 
   useEffect(() => {
     const canvas = canvasRef.current!
-    canvas.width = WIDTH * CELL_SIZE
-    canvas.height = HEIGHT * CELL_SIZE
+    canvas.width = PIXEL_WIDTH * CELL_SIZE
+    canvas.height = PIXEL_HEIGHT * CELL_SIZE
     const ctx = canvas.getContext('2d')!
 
     ctx.clearRect(0,0,canvas.width, canvas.height)
     // draw board
-    for (let y = 0; y < HEIGHT; y++) {
-      for (let x = 0; x < WIDTH; x++) {
+    for (let y = 0; y < PIXEL_HEIGHT; y++) {
+      for (let x = 0; x < PIXEL_WIDTH; x++) {
         const c = state.board[y][x]
         if (c) {
           ctx.fillStyle = c
@@ -63,9 +63,9 @@ export default function App() {
     // draw active cluster
     ctx.fillStyle = state.active.color
     for (const [dx,dy] of state.active.shape) {
-      const x = state.active.x + dx
-      const y = state.active.y + dy
-      ctx.fillRect(x*CELL_SIZE, y*CELL_SIZE, CELL_SIZE, CELL_SIZE)
+      const x = (state.active.x + dx) * SUBDIV
+      const y = (state.active.y + dy) * SUBDIV
+      ctx.fillRect(x*CELL_SIZE, y*CELL_SIZE, SUBDIV*CELL_SIZE, SUBDIV*CELL_SIZE)
     }
   }, [state])
 
